@@ -39,9 +39,9 @@ public class StudentController {
     }
 
     @GetMapping(value = "/student/{id}")
-    public Student getStudent(@PathVariable("id") long id) {
+    public ResponseEntity<Student> getStudent(@PathVariable("id") long id) {
         try {
-            return studentService.getStudent(id);
+            return ResponseEntity.ok(studentService.getStudent(id));
         } catch (StudentNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student Not Found", ex);
         }
