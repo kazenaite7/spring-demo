@@ -1,5 +1,6 @@
 package com.example.demoakademijus.student;
 
+import com.example.demoakademijus.address.Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,21 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository repo;
 
     public Student getStudent(Long id) throws StudentNotFoundException {
-        Optional<Student> student = repo.findById(id);
-        if (student.isPresent()) {
-            return student.get();
-        } else {
-            throw new StudentNotFoundException();
-        }
+        return repo.findById(id)
+                .orElseThrow(StudentNotFoundException::new);
+    }
+
+    public Student getStudent__(Long id) throws StudentNotFoundException {
+        return repo.findById(id)
+                .orElseGet(this::getNewStudent);
+    }
+
+    private Student getNewStudent() {
+        logger.info("getNewStudent ...");
+        Address address = new Address(777L, "Gedimino 11", null);
+        Student newStudent = new Student(666L, "Jonas", "filologija", 5.5, address);
+        address.setStudent(newStudent);
+        return newStudent;
     }
 
     public Optional<Student> getStudentById(Long id) {
@@ -32,15 +42,16 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> getStudents() {
         logger.debug("Inside of getStudents method");
-        List<Student> allStudentList = new ArrayList<>();
-        for (Student student : repo.findAll()) {
-            allStudentList.add(student);
-        }
-        return allStudentList;
+        return new ArrayList<>(repo.findAll());
     }
 
     public Student createStudent(Student student) {
-        return (Student) repo.save(student);
+        return repo.save(student);
+    }
+
+    public Student updateStudent(Student student, long id) {
+        student.setId(id);
+        return repo.save(student);
     }
 
     public String getMessage() {

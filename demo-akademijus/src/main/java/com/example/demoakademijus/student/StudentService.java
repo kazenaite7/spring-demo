@@ -9,6 +9,7 @@ public interface StudentService {
     List<Student> getStudents();
 
     Student createStudent(Student student);
+    Student updateStudent(Student student, long id);
 
     void deleteById(long id);
 

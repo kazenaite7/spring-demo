@@ -56,24 +56,17 @@ public class StudentController {
     public ResponseEntity<Object> createStudentWithReturn(@RequestBody Student student) {
         Student savedStudent = studentService.createStudent(student);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id").buildAndExpand(savedStudent.getId()).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedStudent.getId()).toUri();
 
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping(value = "/updateStudent/{id}")
     public ResponseEntity<Object> updateStudent(@RequestBody Student student, @PathVariable long id) {
-        Optional<Student> studentOptional = studentService.getStudentById(id);
-
-        if (!studentOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        student.setId(id);
-
-        studentService.createStudent(student);
-
-        return ResponseEntity.noContent().build();
+        return  studentService.getStudentById(id)
+                .map(s -> studentService.updateStudent(student, id))
+                .map(s -> ResponseEntity.noContent().build())
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 

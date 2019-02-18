@@ -20,6 +20,17 @@ public class Student implements Serializable {
     @RestResource(path = "studentAddress", rel = "address")
     private Address address;
 
+    public Student() {
+    }
+
+    public Student(Long id, String name, String studySubject, Double gradeAverage, Address address) {
+        this.id = id;
+        this.name = name;
+        this.studySubject = studySubject;
+        this.gradeAverage = gradeAverage;
+        this.address = address;
+    }
+
     public Long getId() {
         return id;
     }
