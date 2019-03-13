@@ -1,3 +1,2 @@
 # spring-demo
-
-Swedbank IT academy task to learn Spring.
+IT academy task to learn Spring.
